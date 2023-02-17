@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE "anuncio" (
+CREATE TABLE "House" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "link" TEXT NOT NULL,
     "title" TEXT,
@@ -20,4 +20,4 @@ CREATE TABLE "anuncio" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "anuncio_link_key" ON "anuncio"("link");
+CREATE UNIQUE INDEX "House_link_key" ON "House"("link");

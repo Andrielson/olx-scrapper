@@ -10,7 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Anuncio {
+model House {
   id             String   @id
   link           String   @unique
   title          String?
