@@ -9,3 +9,23 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+model Anuncio {
+  id             String   @id
+  link           String   @unique
+  title          String?
+  rentAmount     Decimal?
+  condominiumFee Decimal?
+  taxAmount      Decimal?
+  area           Decimal?
+  bedrooms       Int?
+  bathrooms      Int?
+  garages        Int?
+  postalCode     String?
+  city           String?
+  neighborhood   String?
+  address        String?
+  available      Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now())
+}
