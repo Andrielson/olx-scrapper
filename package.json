@@ -1,0 +1,8 @@
+{
+  "name": "olx-scrapper",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@gitlab.com:andrielson/olx-scrapper.git",
+  "author": "Andrielson Ferreira da Silva <andrielson@gmail.com>",
+  "license": "MIT"
+}
