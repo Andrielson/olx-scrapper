@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "House" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "hash" TEXT NOT NULL PRIMARY KEY,
     "link" TEXT NOT NULL,
     "title" TEXT,
     "rentAmount" DECIMAL,
@@ -14,6 +14,7 @@ CREATE TABLE "House" (
     "city" TEXT,
     "neighborhood" TEXT,
     "address" TEXT,
+    "ignored" BOOLEAN NOT NULL DEFAULT false,
     "available" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
