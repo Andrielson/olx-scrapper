@@ -4,13 +4,10 @@ import { digest } from "./digest";
 import { sanitizeInfo } from "./sanitize";
 import { HouseInfo, HouseLink } from "./types";
 
-const mainUrl =
-  "https://www.olx.com.br/imoveis/aluguel/casas/estado-sp/regiao-de-sao-jose-do-rio-preto/regiao-de-sao-jose-do-rio-preto/sao-jose-do-rio-preto";
-
-const houseLinkSelector = "li.sc-1mburcf-1 > a";
-const houseFieldSelector = ".sc-hmzhuo.ad__sc-1f2ug0x-3.sSzeX.sc-jTzLTM.iwtnNi";
-
-const PAGE_SEARCHS_LIMIT = 1;
+const homeUrl = process.env["OLX_HOME_URL"];
+const houseLinkSelector = process.env["OLX_HOUSE_LINK_SELECTOR"];
+const houseFieldSelector = process.env["OLX_HOUSE_FIELD_SELECTOR"];
+const pageSearchsLimit = Number(process.env["OLX_PAGE_SEARCHS_LIMIT"]);
 
 const getNthChildText = <T extends AnyNode>(i: number, el: T, $: CheerioAPI) =>
   $($(el).children().get(i)).text();
@@ -20,7 +17,7 @@ async function getHouseLinksOnPage(pageNumber: number) {
   let response: AxiosResponse<string>;
 
   try {
-    response = await get<string>(`${mainUrl}?o=${pageNumber}`);
+    response = await get<string>(`${homeUrl}?o=${pageNumber}`);
   } catch (error) {
     return [];
   }
@@ -61,7 +58,7 @@ export async function getHouseLinks() {
   const links: HouseLink[] = [];
   let pageNumber = 1;
 
-  while (pageNumber <= PAGE_SEARCHS_LIMIT) {
+  while (pageNumber <= pageSearchsLimit) {
     const newLinks = await getHouseLinksOnPage(pageNumber++);
     if (!newLinks || newLinks.length === 0) break;
     links.push(...newLinks);
