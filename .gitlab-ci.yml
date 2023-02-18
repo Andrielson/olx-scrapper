@@ -24,6 +24,8 @@ default:
 
 install-dependencies:
   stage: .pre
+  rules:
+    - if: $CI_PIPELINE_SOURCE != "schedule"
   cache:
     # inherit all global cache settings
     <<: *global_cache
@@ -40,6 +42,8 @@ include:
 
 build-artifacts:
   stage: build
+  rules:
+    - if: $CI_PIPELINE_SOURCE != "schedule"
   script:
     - yarn build
     - yarn install --cache-folder .yarn-cache --ignore-scripts --prefer-offline --production
@@ -54,6 +58,7 @@ deploy:
   stage: deploy
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
+  cache: {}
   script:
     # - wget -q -O scrapper.zip "${SCRAPPER_ARTIFACTS_URL}"
     # - unzip -q scrapper.zip
