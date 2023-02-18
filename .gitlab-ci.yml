@@ -37,6 +37,8 @@ install-dependencies:
 
 sast:
   stage: test
+  rules:
+    - if: $CI_PIPELINE_SOURCE != "schedule"
 include:
   - template: Security/SAST.gitlab-ci.yml
 
