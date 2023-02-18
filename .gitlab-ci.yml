@@ -32,6 +32,7 @@ build-artifacts:
   rules:
     - if: $CI_PIPELINE_SOURCE != "schedule"
   script:
+    - yarn prisma generate
     - yarn build
     - yarn install --cache-folder .yarn-cache --ignore-scripts --prefer-offline --production
   artifacts:
@@ -41,12 +42,20 @@ build-artifacts:
       - prisma/
       - package.json
 
-deploy:
+push-image:
   stage: deploy
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  cache: []
   script:
-    - cp $ENV_FILE .env
-    - yarn build
-    - yarn install --cache-folder .yarn-cache --ignore-scripts --prefer-offline --production
-    - node dist/index
+    - echo "Building Docker image..."
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+    - echo -e "*\n!dist/\n!node_modules/" > .dockerignore
+    - >-
+      /kaniko/executor
+      --cache=true --cache-copy-layers=true --cache-ttl=24h
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/Dockerfile.cicd"
+      --destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_TAG}"
