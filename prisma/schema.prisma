@@ -6,18 +6,19 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
 model House {
-  hash           String   @id
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  hash           String   @unique
   link           String   @unique
   title          String?
-  rentAmount     Decimal?
-  condominiumFee Decimal?
-  taxAmount      Decimal?
-  area           Decimal?
+  rentAmount     Float?
+  condominiumFee Float?
+  taxAmount      Float?
+  area           Float?
   bedrooms       Int?
   bathrooms      Int?
   garages        Int?
