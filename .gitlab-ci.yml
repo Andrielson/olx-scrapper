@@ -47,9 +47,5 @@ deploy:
     - if: $CI_PIPELINE_SOURCE == "schedule"
   cache: {}
   script:
-    # - wget -q -O scrapper.zip "${SCRAPPER_ARTIFACTS_URL}"
-    # - unzip -q scrapper.zip
-    # - node dist/index
-    - cat $ENV_FILE
     - cp $ENV_FILE .env
-    - ls -lha
+    - node dist/index
