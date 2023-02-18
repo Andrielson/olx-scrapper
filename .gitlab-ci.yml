@@ -47,5 +47,8 @@ deploy:
     - if: $CI_PIPELINE_SOURCE == "schedule"
   cache: {}
   script:
+    - rm -rf *.*
     - cp $ENV_FILE .env
+    - wget -q -O build.zip "${BUILD_ARTIFACTS_URL}"
+    - unzip -q build.zip
     - node dist/index
