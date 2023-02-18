@@ -1,6 +1,9 @@
-export interface HouseRecord {
+export interface HouseLink {
   hash: string;
   link: string;
+}
+
+export interface HouseInfo {
   title?: string;
   rentAmount?: number;
   condominiumFee?: number;
@@ -13,13 +16,11 @@ export interface HouseRecord {
   city?: string;
   neighborhood?: string;
   address?: string;
+}
+
+export interface HouseRecord extends HouseLink, HouseInfo {
   ignored: boolean;
   available: boolean;
   createdAt: Date;
   updatedAt?: Date;
 }
-
-export type HouseInfo = Omit<
-  HouseRecord,
-  "hash" | "link" | "ignored" | "available" | "createdAt" | "updatedAt"
->;
