@@ -25,10 +25,8 @@ async function getAllHashesAndUpdateAvailableLinks(links: HouseLink[]) {
   return houses.map((h) => h.hash);
 }
 
-async function insertMany(houseRecords: HouseRecord[]) {
-  await prisma.$transaction(
-    houseRecords.map((data) => prisma.house.create({ data }))
-  );
+async function insertMany(data: HouseRecord[]) {
+  await prisma.house.createMany({ data });
 }
 
 export const DB = {
