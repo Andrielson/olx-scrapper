@@ -1,8 +1,21 @@
 import { checkIgnoredHouse } from "./check-ignored-house";
 import { DB } from "./db";
 import { filterLinks } from "./filter-links";
+import mailServiceFactory from "./mail.service";
 import { getHouseInfo, getHouseLinks } from "./scrapper";
 import { HouseInfo, HouseRecord } from "./types";
+
+async function notifyNewHouses(houses: HouseRecord[]) {
+  const mailService = mailServiceFactory();
+
+  const text = houses.map((h) => `- ${h.link}`).join("\n\n");
+
+  await mailService.sendMessage({
+    text,
+    to: "andrielson@gmail.com",
+    subject: "Novas casas encontradas na OLX",
+  });
+}
 
 async function main() {
   const links = await getHouseLinks();
@@ -13,7 +26,7 @@ async function main() {
 
   const notifiableHouses: HouseRecord[] = [];
 
-  console.log(`Searching on ${searchableLinks.length} links...`);
+  console.log(`Collecting info from ${searchableLinks.length} houses...`);
   const houseRecords: HouseRecord[] = await searchableLinks.reduce(
     async (previous, { hash, link }) => {
       const records = await previous;
@@ -35,13 +48,14 @@ async function main() {
   );
 
   try {
+    console.log('Saving results...')
     await DB.insertMany(houseRecords);
   } catch (error) {
     console.error(error);
   }
 
-  //notify new houses
-  console.log(notifiableHouses.length);
+  console.log(`Found ${notifiableHouses.length} houses of interest!`);
+  await notifyNewHouses(notifiableHouses);
 }
 
 main()

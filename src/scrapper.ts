@@ -13,7 +13,6 @@ const getNthChildText = <T extends AnyNode>(i: number, el: T, $: CheerioAPI) =>
   $($(el).children().get(i)).text();
 
 async function getHouseLinksOnPage(pageNumber: number) {
-  console.log(`Searching page ${pageNumber}`);
   let response: AxiosResponse<string>;
 
   try {
@@ -57,12 +56,14 @@ export async function getHouseInfo(houseUrl: string): Promise<HouseInfo> {
 export async function getHouseLinks() {
   const links: HouseLink[] = [];
   let pageNumber = 1;
-
+  
+  console.log(`Searching pages...`);
   while (pageNumber <= pageSearchsLimit) {
     const newLinks = await getHouseLinksOnPage(pageNumber++);
     if (!newLinks || newLinks.length === 0) break;
     links.push(...newLinks);
   }
+  console.log(`Found ${links.length} on ${pageNumber} pages`);
 
   return links;
 }
