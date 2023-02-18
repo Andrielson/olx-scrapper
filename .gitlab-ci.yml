@@ -6,8 +6,58 @@
 # Note that environment variables can be set in several places
 # See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 stages:
-- test
+  - test
+  - build
+  - deploy
+
+default:
+  image: node:lts-alpine3.17
+  # Cache modules in between jobs
+  cache: &global_cache
+    key:
+      files:
+        - yarn.lock
+    paths:
+      - .yarn-cache/
+      - node_modules/
+    policy: pull
+
+install-dependencies:
+  stage: .pre
+  cache:
+    # inherit all global cache settings
+    <<: *global_cache
+    # override the policy
+    policy: pull-push
+  script:
+    - apk add --no-cache libc6-compat
+    - yarn install --cache-folder .yarn-cache --frozen-lockfile --prefer-offline
+
 sast:
   stage: test
 include:
-- template: Security/SAST.gitlab-ci.yml
+  - template: Security/SAST.gitlab-ci.yml
+
+build-artifacts:
+  stage: build
+  script:
+    - yarn build
+    - yarn install --cache-folder .yarn-cache --ignore-scripts --prefer-offline --production
+  artifacts:
+    paths:
+      - dist/
+      - node_modules/
+      - prisma/
+      - package.json
+
+deploy:
+  stage: deploy
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+  script:
+    # - wget -q -O scrapper.zip "${SCRAPPER_ARTIFACTS_URL}"
+    # - unzip -q scrapper.zip
+    # - node dist/index
+    - cat $ENV_FILE
+    - cp $ENV_FILE .env
+    - ls -lha
