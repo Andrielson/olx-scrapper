@@ -24,6 +24,11 @@ async function main() {
 
   const searchableLinks = filterLinks(links, existingHashes);
 
+  if (searchableLinks.length === 0) {
+    console.log("No house was found!");
+    return;
+  }
+
   const notifiableHouses: HouseRecord[] = [];
 
   console.log(`Collecting info from ${searchableLinks.length} houses...`);
@@ -48,14 +53,16 @@ async function main() {
   );
 
   try {
-    console.log('Saving results...')
+    console.log("Saving results...");
     await DB.insertMany(houseRecords);
   } catch (error) {
     console.error(error);
   }
 
-  console.log(`Found ${notifiableHouses.length} houses of interest!`);
-  await notifyNewHouses(notifiableHouses);
+  if (notifiableHouses.length > 0) {
+    console.log(`Found ${notifiableHouses.length} houses of interest!`);
+    await notifyNewHouses(notifiableHouses);
+  }
 }
 
 main()
