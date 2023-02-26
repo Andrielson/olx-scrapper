@@ -16,7 +16,7 @@ async function getHouseLinksOnPage(pageNumber: number) {
   let response: AxiosResponse<string>;
 
   try {
-    response = await get<string>(`${homeUrl}?o=${pageNumber}`);
+    response = await get<string>(`${homeUrl}?sp=2&o=${pageNumber}`);
   } catch (error) {
     return [];
   }
@@ -56,7 +56,7 @@ export async function getHouseInfo(houseUrl: string): Promise<HouseInfo> {
 export async function getHouseLinks() {
   const links: HouseLink[] = [];
   let pageNumber = 1;
-  
+
   console.log(`Searching pages...`);
   while (pageNumber <= pageSearchsLimit) {
     const newLinks = await getHouseLinksOnPage(pageNumber++);
