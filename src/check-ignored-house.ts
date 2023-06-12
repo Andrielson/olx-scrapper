@@ -33,9 +33,9 @@ const IGNORED_NEIGHBORHOODS: string[] = [
   "Vila Moreira",
   "Jardim Santa Rosa I",
 ];
-const MIN_BEDROOMS = 3;
-const MIN_RENT_AMOUNT = 0;
-const MAX_RENT_AMOUNT = 3000;
+const MIN_BEDROOMS = Number(process.env["MIN_BEDROOMS"]) ?? 3;
+const MIN_RENT_AMOUNT = Number(process.env["MIN_RENT_AMOUNT"]) ?? 2000;
+const MAX_RENT_AMOUNT = Number(process.env["MAX_RENT_AMOUNT"]) ?? 5000;
 
 export function checkIgnoredHouse(house: HouseRecord) {
   if (!!house.bedrooms && house.bedrooms < MIN_BEDROOMS) return true;
